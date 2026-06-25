@@ -117,8 +117,6 @@ export function activate(context: vscode.ExtensionContext): void {
   );
 }
 
-export function deactivate(): void {}
-
 function toErrorMessage(error: unknown): string {
   if (error instanceof Error) {
     return error.message;
