@@ -1,48 +1,54 @@
 # Claude Code Generate Commit Message
 
-VS Code extension สำหรับ generate commit message จาก git diff โดย default ใช้ Claude Code CLI และออกแบบให้เพิ่ม AI provider/model ใหม่ได้ง่าย
+Generate commit messages from Git diffs in VS Code. The default provider is Claude Code CLI, with a small provider layer that makes it easy to switch models or add another AI command later.
 
 ## Features
 
-- ปุ่ม `Generate Commit Message` บน Source Control title bar
-- ซ่อนปุ่ม generate และแจ้งเตือนอัตโนมัติถ้าเครื่องยังไม่มี AI CLI ของ provider ที่เลือก
-- ซ่อนปุ่ม generate อัตโนมัติถ้ายังไม่มี Git repository
-- อ่าน diff แบบ `auto` เป็น default โดยใช้ staged changes ก่อน ถ้าไม่มีจะ fallback ไป unstaged changes
-- เขียนผลลัพธ์กลับเข้า Git commit input box
-- เปลี่ยน AI provider/model ผ่าน VS Code Settings หรือ command palette
-- ใช้ `custom-command` provider เพื่อเรียก AI CLI อื่นได้โดยไม่ต้องแก้ source
-- Provider architecture แยกจาก command/UI เพื่อ maintenance และต่อยอดได้ง่าย
+- Adds a `Generate Commit Message` button to the Source Control title bar.
+- Hides the generate button when the selected AI CLI is not available.
+- Hides the generate button when no Git repository is open.
+- Reads diffs in `auto` mode by default: staged changes first, then unstaged changes.
+- Writes the generated message back to the Git commit input box.
+- Supports provider/model configuration through VS Code settings and commands.
+- Includes a `custom-command` provider for alternate AI CLIs or local scripts.
+- Keeps provider logic separate from VS Code command/UI wiring for easier maintenance.
 
 ## Requirements
 
-- ถ้าใช้ provider `claude-code` ต้องติดตั้ง Claude Code CLI และ login ให้เรียบร้อย
-- ถ้าใช้ provider `custom-command` ต้องตั้งค่า command ให้เรียกใช้งานได้จาก environment ของ VS Code
+- For the `claude-code` provider, install and sign in to Claude Code CLI.
+- For the `custom-command` provider, configure a command that is available from the VS Code environment.
 
 ## Usage
 
-1. เปิด workspace ที่เป็น Git repository
-2. เปิด Source Control view
-3. กดปุ่ม `Generate Commit Message`
-4. ตรวจ commit message ที่ถูกใส่ใน Git input box แล้ว commit ได้เลย
+1. Open a workspace that contains a Git repository.
+2. Open the Source Control view.
+3. Click `Generate Commit Message`.
+4. Review the generated message in the Git commit input box, then commit as usual.
 
-ถ้าปุ่มไม่ขึ้น ให้เช็คว่าเครื่องมี AI CLI ของ provider ที่เลือก และ workspace ที่เปิดอยู่เป็น Git repository
+If the button is not visible, check that the selected AI CLI is installed and that the active workspace is a Git repository.
 
 ## Settings
 
 | Setting | Default | Description |
 | --- | --- | --- |
-| `claudeCommit.ai.provider` | `claude-code` | AI provider ที่ใช้ generate |
-| `claudeCommit.ai.model` | empty | model name ถ้าว่างจะใช้ default ของ provider |
-| `claudeCommit.providers.claudeCode.command` | `claude` | Claude Code CLI command |
-| `claudeCommit.providers.claudeCode.arguments` | `["-p", "{prompt}"]` | arguments หลักของ Claude Code CLI |
-| `claudeCommit.providers.claudeCode.modelArguments` | `["--model", "{model}"]` | arguments ที่เพิ่มเมื่อมี model |
-| `claudeCommit.providers.customCommand.command` | empty | custom AI CLI command |
-| `claudeCommit.providers.customCommand.arguments` | `["{prompt}"]` | arguments ของ custom AI CLI |
-| `claudeCommit.providers.customCommand.modelArguments` | `["--model", "{model}"]` | arguments ที่เพิ่มเมื่อมี model |
-| `claudeCommit.git.diffMode` | `auto` | `staged`, `unstaged`, หรือ `auto` |
-| `claudeCommit.commit.style` | `conventional` | `conventional` หรือ `simple` |
-| `claudeCommit.commit.locale` | `en` | ภาษาของ commit message |
-| `claudeCommit.commit.maxSubjectLength` | `72` | ความยาว subject line |
+| `claudeCommit.ai.provider` | `claude-code` | AI provider used for generation. |
+| `claudeCommit.ai.model` | empty | Model name. Leave empty to use the provider default. |
+| `claudeCommit.providers.claudeCode.command` | `claude` | Claude Code CLI command. |
+| `claudeCommit.providers.claudeCode.arguments` | `["-p", "{prompt}"]` | Arguments for Claude Code CLI. |
+| `claudeCommit.providers.claudeCode.modelArguments` | `["--model", "{model}"]` | Arguments appended when a model is configured. |
+| `claudeCommit.providers.customCommand.command` | empty | Custom AI CLI command. |
+| `claudeCommit.providers.customCommand.arguments` | `["{prompt}"]` | Arguments for the custom AI CLI. |
+| `claudeCommit.providers.customCommand.modelArguments` | `["--model", "{model}"]` | Arguments appended when a model is configured. |
+| `claudeCommit.git.diffMode` | `auto` | Diff source: `staged`, `unstaged`, or `auto`. |
+| `claudeCommit.commit.style` | `conventional` | Commit style: `conventional` or `simple`. |
+| `claudeCommit.commit.locale` | `en` | Language/locale for the generated commit message. |
+| `claudeCommit.commit.maxSubjectLength` | `72` | Maximum subject line length. |
+
+## Commands
+
+- `AI Commit: Generate Commit Message`
+- `AI Commit: Select AI Provider`
+- `AI Commit: Select AI Model`
 
 ## Architecture
 
@@ -70,12 +76,12 @@ src/
     process.ts                  # child process helper
 ```
 
-การเพิ่ม provider ใหม่ควรทำตาม pattern นี้:
+To add a provider:
 
-1. สร้างไฟล์ใหม่ใน `src/ai/providers/`
-2. implement `AIProvider`
-3. register ใน `src/extension.ts`
-4. เพิ่ม config schema ใน `package.json`
+1. Create a new file in `src/ai/providers/`.
+2. Implement `AIProvider`.
+3. Register it in `src/extension.ts`.
+4. Add its configuration schema to `package.json`.
 
 ## Development
 
@@ -85,7 +91,7 @@ npm run compile
 npm test
 ```
 
-จากนั้นเปิด repo ใน VS Code แล้วกด `F5` เพื่อ run Extension Development Host
+Open this repository in VS Code and press `F5` to run the Extension Development Host.
 
 ## Packaging
 
@@ -93,4 +99,4 @@ npm test
 npm run package
 ```
 
-คำสั่งนี้จะสร้างไฟล์ `.vsix` สำหรับติดตั้งหรือตรวจสอบก่อน publish ขึ้น Marketplace
+This creates a `.vsix` file that can be installed locally or inspected before publishing to the VS Code Marketplace.

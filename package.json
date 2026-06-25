@@ -3,7 +3,7 @@
   "displayName": "Claude Code Generate Commit Message",
   "description": "Generate commit messages from git diffs with a pluggable AI provider architecture.",
   "version": "0.0.1",
-  "publisher": "rachanon",
+  "publisher": "RCN (Rachanon)",
   "icon": "icon.png",
   "license": "MIT",
   "repository": {
