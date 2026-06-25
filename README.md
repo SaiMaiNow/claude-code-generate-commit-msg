@@ -5,6 +5,7 @@ VS Code extension สำหรับ generate commit message จาก git diff 
 ## Features
 
 - ปุ่ม `Generate Commit Message` บน Source Control title bar
+- ซ่อนปุ่ม generate และแจ้งเตือนอัตโนมัติถ้าเครื่องยังไม่มี AI CLI ของ provider ที่เลือก
 - อ่าน diff จาก staged changes เป็น default
 - เขียนผลลัพธ์กลับเข้า Git commit input box
 - เปลี่ยน AI provider/model ผ่าน VS Code Settings หรือ command palette
@@ -13,8 +14,8 @@ VS Code extension สำหรับ generate commit message จาก git diff 
 
 ## Requirements
 
-- ติดตั้ง Claude Code CLI และ login ให้เรียบร้อย
-- ให้คำสั่ง `claude` เรียกใช้งานได้จาก environment ของ VS Code
+- ถ้าใช้ provider `claude-code` ต้องติดตั้ง Claude Code CLI และ login ให้เรียบร้อย
+- ถ้าใช้ provider `custom-command` ต้องตั้งค่า command ให้เรียกใช้งานได้จาก environment ของ VS Code
 
 ## Settings
 
@@ -48,12 +49,14 @@ src/
   config/
     extensionConfig.ts          # typed VS Code settings
   core/
+    aiCliAvailabilityService.ts # selected provider CLI availability check
     commitMessageService.ts     # orchestration use case
     gitInputWriter.ts           # write generated text to Git input box
     promptBuilder.ts            # prompt policy and formatting
   git/
     gitService.ts               # git repo discovery and diff reading
   shared/
+    commandExists.ts            # cross-platform command lookup
     process.ts                  # child process helper
 ```
 

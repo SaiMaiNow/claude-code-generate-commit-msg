@@ -9,13 +9,10 @@
     "vscode": "^1.90.0"
   },
   "categories": [
-    "Source Control",
     "Other"
   ],
   "activationEvents": [
-    "onCommand:claudeCommit.generateCommitMessage",
-    "onCommand:claudeCommit.selectProvider",
-    "onCommand:claudeCommit.selectModel"
+    "onStartupFinished"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -41,12 +38,14 @@
       "scm/title": [
         {
           "command": "claudeCommit.generateCommitMessage",
+          "when": "claudeCommit.aiCliAvailable",
           "group": "navigation"
         }
       ],
       "commandPalette": [
         {
-          "command": "claudeCommit.generateCommitMessage"
+          "command": "claudeCommit.generateCommitMessage",
+          "when": "claudeCommit.aiCliAvailable"
         },
         {
           "command": "claudeCommit.selectProvider"
