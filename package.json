@@ -1,0 +1,174 @@
+{
+  "name": "claude-code-generate-commit-msg",
+  "displayName": "Claude Code Generate Commit Message",
+  "description": "Generate commit messages from git diffs with a pluggable AI provider architecture.",
+  "version": "0.0.1",
+  "publisher": "rachanon",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Source Control",
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:claudeCommit.generateCommitMessage",
+    "onCommand:claudeCommit.selectProvider",
+    "onCommand:claudeCommit.selectModel"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "claudeCommit.generateCommitMessage",
+        "title": "Generate Commit Message",
+        "category": "AI Commit",
+        "icon": "$(sparkle)"
+      },
+      {
+        "command": "claudeCommit.selectProvider",
+        "title": "Select AI Provider",
+        "category": "AI Commit"
+      },
+      {
+        "command": "claudeCommit.selectModel",
+        "title": "Select AI Model",
+        "category": "AI Commit"
+      }
+    ],
+    "menus": {
+      "scm/title": [
+        {
+          "command": "claudeCommit.generateCommitMessage",
+          "group": "navigation"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "claudeCommit.generateCommitMessage"
+        },
+        {
+          "command": "claudeCommit.selectProvider"
+        },
+        {
+          "command": "claudeCommit.selectModel"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "AI Commit Message",
+      "properties": {
+        "claudeCommit.ai.provider": {
+          "type": "string",
+          "default": "claude-code",
+          "enum": [
+            "claude-code",
+            "custom-command"
+          ],
+          "description": "AI provider used to generate commit messages."
+        },
+        "claudeCommit.ai.model": {
+          "type": "string",
+          "default": "",
+          "description": "AI model name. Leave empty to use the selected provider's default model."
+        },
+        "claudeCommit.providers.claudeCode.command": {
+          "type": "string",
+          "default": "claude",
+          "description": "Claude Code CLI command."
+        },
+        "claudeCommit.providers.claudeCode.arguments": {
+          "type": "array",
+          "default": [
+            "-p",
+            "{prompt}"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Arguments for the Claude Code CLI. Use {prompt} where the prompt should be inserted."
+        },
+        "claudeCommit.providers.claudeCode.modelArguments": {
+          "type": "array",
+          "default": [
+            "--model",
+            "{model}"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Arguments appended when claudeCommit.ai.model is set. Use {model} where the model name should be inserted."
+        },
+        "claudeCommit.providers.customCommand.command": {
+          "type": "string",
+          "default": "",
+          "description": "Custom AI CLI command. Use this when claudeCommit.ai.provider is set to custom-command."
+        },
+        "claudeCommit.providers.customCommand.arguments": {
+          "type": "array",
+          "default": [
+            "{prompt}"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Arguments for the custom AI command. Use {prompt} where the prompt should be inserted."
+        },
+        "claudeCommit.providers.customCommand.modelArguments": {
+          "type": "array",
+          "default": [
+            "--model",
+            "{model}"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Arguments appended when claudeCommit.ai.model is set. Use {model} where the model name should be inserted."
+        },
+        "claudeCommit.git.diffMode": {
+          "type": "string",
+          "default": "staged",
+          "enum": [
+            "staged",
+            "unstaged",
+            "auto"
+          ],
+          "description": "Diff source used for generation. Auto prefers staged changes and falls back to unstaged changes."
+        },
+        "claudeCommit.commit.style": {
+          "type": "string",
+          "default": "conventional",
+          "enum": [
+            "conventional",
+            "simple"
+          ],
+          "description": "Commit message style."
+        },
+        "claudeCommit.commit.locale": {
+          "type": "string",
+          "default": "en",
+          "description": "Language/locale for the generated commit message, for example en or th."
+        },
+        "claudeCommit.commit.maxSubjectLength": {
+          "type": "number",
+          "default": 72,
+          "minimum": 40,
+          "maximum": 120,
+          "description": "Maximum subject line length."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p .",
+    "test": "npm run compile && node --test \"dist/test/**/*.test.js\"",
+    "watch": "tsc -watch -p .",
+    "vscode:prepublish": "npm run compile"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/vscode": "1.90.0",
+    "typescript": "^5.5.0"
+  }
+}
