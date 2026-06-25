@@ -18,6 +18,15 @@ VS Code extension สำหรับ generate commit message จาก git diff 
 - ถ้าใช้ provider `claude-code` ต้องติดตั้ง Claude Code CLI และ login ให้เรียบร้อย
 - ถ้าใช้ provider `custom-command` ต้องตั้งค่า command ให้เรียกใช้งานได้จาก environment ของ VS Code
 
+## Usage
+
+1. เปิด workspace ที่เป็น Git repository
+2. เปิด Source Control view
+3. กดปุ่ม `Generate Commit Message`
+4. ตรวจ commit message ที่ถูกใส่ใน Git input box แล้ว commit ได้เลย
+
+ถ้าปุ่มไม่ขึ้น ให้เช็คว่าเครื่องมี AI CLI ของ provider ที่เลือก และ workspace ที่เปิดอยู่เป็น Git repository
+
 ## Settings
 
 | Setting | Default | Description |
@@ -73,6 +82,15 @@ src/
 ```bash
 npm install
 npm run compile
+npm test
 ```
 
 จากนั้นเปิด repo ใน VS Code แล้วกด `F5` เพื่อ run Extension Development Host
+
+## Packaging
+
+```bash
+npm run package
+```
+
+คำสั่งนี้จะสร้างไฟล์ `.vsix` สำหรับติดตั้งหรือตรวจสอบก่อน publish ขึ้น Marketplace

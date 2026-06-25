@@ -4,9 +4,42 @@
   "description": "Generate commit messages from git diffs with a pluggable AI provider architecture.",
   "version": "0.0.1",
   "publisher": "rachanon",
+  "icon": "icon.png",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SaiMaiNow/claude-code-generate-commit-msg.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SaiMaiNow/claude-code-generate-commit-msg/issues"
+  },
+  "homepage": "https://github.com/SaiMaiNow/claude-code-generate-commit-msg#readme",
+  "keywords": [
+    "commit",
+    "git",
+    "source-control",
+    "ai",
+    "claude",
+    "claude-code",
+    "commit-message",
+    "conventional-commits"
+  ],
+  "galleryBanner": {
+    "color": "#1F2937",
+    "theme": "dark"
+  },
+  "pricing": "Free",
   "engines": {
     "vscode": "^1.90.0"
+  },
+  "extensionKind": [
+    "workspace"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": false,
+      "description": "This extension reads git diffs and runs the configured AI CLI command from the workspace."
+    }
   },
   "categories": [
     "Other"
@@ -160,7 +193,10 @@
     }
   },
   "scripts": {
-    "compile": "tsc -p .",
+    "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
+    "compile": "npm run clean && tsc -p .",
+    "package": "vsce package",
+    "publish": "vsce publish",
     "test": "npm run compile && node --test \"dist/test/**/*.test.js\"",
     "watch": "tsc -watch -p .",
     "vscode:prepublish": "npm run compile"
@@ -168,6 +204,7 @@
   "devDependencies": {
     "@types/node": "^20.14.0",
     "@types/vscode": "1.90.0",
+    "@vscode/vsce": "^3.9.2",
     "typescript": "^5.5.0"
   }
 }

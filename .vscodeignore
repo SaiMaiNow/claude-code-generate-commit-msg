@@ -3,4 +3,5 @@ tsconfig.json
 .gitignore
 .vscode/**
 node_modules/**
-*.map
+dist/test/**
+**/*.map
