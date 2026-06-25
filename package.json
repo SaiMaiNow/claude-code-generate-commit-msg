@@ -38,14 +38,14 @@
       "scm/title": [
         {
           "command": "claudeCommit.generateCommitMessage",
-          "when": "claudeCommit.aiCliAvailable",
+          "when": "claudeCommit.aiCliAvailable && scmProvider == git",
           "group": "navigation"
         }
       ],
       "commandPalette": [
         {
           "command": "claudeCommit.generateCommitMessage",
-          "when": "claudeCommit.aiCliAvailable"
+          "when": "claudeCommit.aiCliAvailable && gitOpenRepositoryCount >= 1"
         },
         {
           "command": "claudeCommit.selectProvider"
@@ -127,7 +127,7 @@
         },
         "claudeCommit.git.diffMode": {
           "type": "string",
-          "default": "staged",
+          "default": "auto",
           "enum": [
             "staged",
             "unstaged",

@@ -3,7 +3,7 @@ import { CommitMessageRequest } from "../ai/aiProvider";
 export function buildCommitPrompt(request: CommitMessageRequest): string {
   const styleInstruction =
     request.style === "conventional"
-      ? "Use the Conventional Commits format, for example: feat(scope): short summary."
+      ? "Use the Conventional Commits format, for example: feat: short summary."
       : "Use a concise imperative commit message.";
 
   return [

@@ -35,13 +35,13 @@ export function activate(context: vscode.ExtensionContext): void {
 
     if (showWarning && !hasShownMissingCliWarning) {
       hasShownMissingCliWarning = true;
-      void showMissingAiCliMessage(availability, "warning");
+      runInBackground(showMissingAiCliMessage(availability, "warning"));
     }
 
     return availability;
   };
 
-  void refreshAiCliAvailability(true);
+  runInBackground(refreshAiCliAvailability(true));
 
   context.subscriptions.push(
     vscode.commands.registerCommand("claudeCommit.generateCommitMessage", async () => {
@@ -111,7 +111,7 @@ export function activate(context: vscode.ExtensionContext): void {
         event.affectsConfiguration("claudeCommit.providers.claudeCode.command") ||
         event.affectsConfiguration("claudeCommit.providers.customCommand.command")
       ) {
-        void refreshAiCliAvailability(true);
+        runInBackground(refreshAiCliAvailability(true));
       }
     })
   );
@@ -155,4 +155,18 @@ function buildMissingAiCliMessage(availability: AiCliAvailability): string {
   }
 
   return `AI Commit cannot find CLI command "${availability.command}" for provider "${availability.providerId}".`;
+}
+
+function runInBackground(task: Promise<unknown>): void {
+  task.catch((error) => {
+    if (isClosedChannelError(error)) {
+      return;
+    }
+
+    console.error(toErrorMessage(error));
+  });
+}
+
+function isClosedChannelError(error: unknown): boolean {
+  return toErrorMessage(error).includes("Channel has been closed");
 }

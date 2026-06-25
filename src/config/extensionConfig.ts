@@ -33,7 +33,7 @@ export class ExtensionConfig {
     return {
       provider: config.get("ai.provider", "claude-code"),
       model: config.get("ai.model", ""),
-      diffMode: config.get("git.diffMode", "staged"),
+      diffMode: config.get("git.diffMode", "auto"),
       style: config.get("commit.style", "conventional"),
       locale: config.get("commit.locale", "en"),
       maxSubjectLength: config.get("commit.maxSubjectLength", 72)

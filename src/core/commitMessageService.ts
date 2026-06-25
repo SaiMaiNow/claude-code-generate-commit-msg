@@ -18,7 +18,7 @@ export class CommitMessageService {
     const diff = await this.gitService.readDiff(repo.rootPath, commitConfig.diffMode);
 
     if (diff.trim().length === 0) {
-      vscode.window.showInformationMessage("No git changes found for commit message generation.");
+      vscode.window.showInformationMessage(getEmptyDiffMessage(commitConfig.diffMode));
       return;
     }
 
@@ -48,4 +48,16 @@ export class CommitMessageService {
 
     vscode.window.showInformationMessage("Commit message generated.");
   }
+}
+
+function getEmptyDiffMessage(diffMode: string): string {
+  if (diffMode === "staged") {
+    return "No staged git changes found for commit message generation.";
+  }
+
+  if (diffMode === "unstaged") {
+    return "No unstaged git changes found for commit message generation.";
+  }
+
+  return "No staged or unstaged git changes found for commit message generation.";
 }
